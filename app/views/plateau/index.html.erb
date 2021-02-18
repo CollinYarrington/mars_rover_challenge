@@ -1,0 +1,29 @@
+<div>
+    <div class="input_panel">
+        <%= form_tag(root_path, method: :get) do %>
+        <p>Set grid size:</p>
+            <label>X :</label> <%= text_field_tag :x, params[:x], autocomplete: 'off' %>
+            <label>Y :</label> <%= text_field_tag :y, params[:y], autocomplete: 'off' %>
+            <%= submit_tag 'Change' %>
+        <% end %>
+    </div>
+
+    <div class="rover_input">
+        <p>Starting point of rover:</p>
+    </div>
+        
+
+    <div class="plateau_panel">
+
+        <%# Had to reverse the output to get the structure correctly layed out %>
+        <% @grid.reverse.each do |grid| %>
+            <div class="location">
+                </p><%= grid %></p>
+                <% if grid == "X(0) , Y(0)" %>
+                    <%= image_tag 'rover_facing_north.png', :height =>'50px' %>
+                <% end %>
+            </div>
+        <% end %>
+        
+    </div>
+</div>

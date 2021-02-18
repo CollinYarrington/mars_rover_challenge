@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>MarsRoverChallengeInRails</title>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+
+    <style>
+
+      html{
+        background-color:#333;
+      }
+
+    /* creates the individual x,y locations for the plateau */
+      .location{
+        background-color: rgba(255, 255, 255, 0.8);
+        border: 1px solid rgba(0, 0, 0, 0.8);
+        padding: 5px;
+        /* margin: 5px; */
+        font-size: 12px;
+        text-align: center;
+        height: 100px;
+        width: 100px;
+      }
+
+    /* creates the grid frontend layout */
+      .plateau_panel{
+        display: grid;
+        grid-template-columns: <%= @css_auto_grid %>;
+        padding: 10px;
+        width:<%= "#{@width}px" %>;
+      }
+    
+    </style>
+  </head>
+
+  <body>
+    <%= yield %>
+  </body>
+</html>
