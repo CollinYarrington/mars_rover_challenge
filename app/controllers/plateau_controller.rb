@@ -57,66 +57,90 @@ class PlateauController < ApplicationController
   def start
     $rover.each_with_index do |rover, index|
     array = []
-    $rotation = 0
+    $rover_orientation = ""
+
+
+
+    # compass_direction = $rotation/90 % 4
+    cardinal_compass_points = []
+
+    # compass_direction << cardinal_compass_points.index(rover[:facing])
+
+    # count = cardinal_compass_points.index(rover[:facing])
+
+    
+      # $rotation = 0
+      # rover[:degrees] = array << $rotation
+    if rover[:facing] == "N"
+      $rotation = 0
+      rover[:degrees] = array << $rotation
+      cardinal_compass_points << cardinal_compass_points.index(rover[:facing])
+    elsif rover[:facing] == "E"
+      $rotation = 90
+      rover[:degrees] = array << $rotation
+      cardinal_compass_points << cardinal_compass_points.index(rover[:facing])
+    elsif rover[:facing] == "S"
+      $rotation = 180
+      rover[:degrees] = array << $rotation
+      cardinal_compass_points << cardinal_compass_points.index(rover[:facing])
+    elsif rover[:facing] == "W"
+      $rotation = 270
+      rover[:degrees] = array << $rotation
+      cardinal_compass_points << cardinal_compass_points.index(rover[:facing])
+    end
+
+
       rover[:directions].each do |directions|
       
         if directions == "L"
           $rotation -= 90
-          # rover[:degrees] = array << $rotation
+          rover[:degrees] = array << $rotation
         elsif directions == "R"
           $rotation += 90
-          # rover[:degrees] = array << $rotation
-        end
-
-        if $rotation != 360 && $rotation != -360
-          rover[:degrees] = array << $rotation
-        else
-          $rotation = 0
           rover[:degrees] = array << $rotation
         end
-        # if $rotation == 360
-        #   $rotation = 0
-        #   rover[:degrees] = array << $rotation
-        # elsif $rotation == -360
-        #   $rotation = 0
-        #   rover[:degrees] = array << $rotation
-        # end
-
-        if directions == "M" && $rotation == 0
+        
+        if $rotation / 90 % 4 == 0
+          $rover_orientation = "N"
+        elsif $rotation / 90 % 4 == 1
+          $rover_orientation = "E"
+        elsif $rotation / 90 % 4 == 2 
+          $rover_orientation = "S"
+        elsif $rotation / 90 % 4 == 3
+          $rover_orientation = "W"
+        elsif $rotation / 90 % 4 == -1
+          $rover_orientation = "W"
+        elsif $rotation / 90 % 4 == -2
+          $rover_orientation = "S"
+        elsif $rotation / 90 % 4 == -3
+          $rover_orientation = "E"
+        end
+        
+        if directions == "M" && $rover_orientation == "N"
           # just increases the value on the y-axis
           rover[:degrees] = array << "M"
           rover[:path] << "#{rover[:path].last.split(",")[0].to_i},#{rover[:path].last.split(",")[1].to_i + 1}"
-        elsif directions == "M" && $rotation == 90
+        elsif directions == "M" && $rover_orientation == "E"
           # just increases the value on the x-axis
           rover[:degrees] = array << "M"
           rover[:path] << "#{rover[:path].last.split(",")[0].to_i + 1},#{rover[:path].last.split(",")[1].to_i}"
-        elsif directions == "M" && $rotation == 180
+        elsif directions == "M" && $rover_orientation == "S"
           # just decreases the value on the y-axis
           rover[:degrees] = array << "M"
           rover[:path] << "#{rover[:path].last.split(",")[0].to_i},#{rover[:path].last.split(",")[1].to_i - 1}"
-        elsif directions == "M" && $rotation == 270  
+        elsif directions == "M" && $rover_orientation == "W"  
           # just decreases the value on the x-axis
           rover[:degrees] = array << "M"
           rover[:path] << "#{rover[:path].last.split(",")[0].to_i - 1},#{rover[:path].last.split(",")[1].to_i}"
-        elsif directions == "M" && $rotation == -90
-          # just decreases the value on the x-axis
-          rover[:degrees] = array << "M"
-          rover[:path] << "#{rover[:path].last.split(",")[0].to_i - 1},#{rover[:path].last.split(",")[1].to_i}"
-        elsif directions == "M" && $rotation == -180
-          # just decreases the value on the y-axis
-          rover[:degrees] = array << "M"
-          rover[:path] << "#{rover[:path].last.split(",")[0].to_i},#{rover[:path].last.split(",")[1].to_i - 1}"
-        elsif directions == "M" && $rotation == -270
-          # just increases the value on the x-axis
-          rover[:degrees] = array << "M"
-          rover[:path] << "#{rover[:path].last.split(",")[0].to_i + 1},#{rover[:path].last.split(",")[1].to_i}"
         end
       end
+      
+      
     end
-    @rover_array_of_hashes = $rover
+    p @rover_array_of_hashes = $rover
     respond_to do |format|
       format.json {render json: @rover_array_of_hashes}
     end
-  end
+  end 
 
 end

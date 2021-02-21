@@ -6,7 +6,7 @@
             <label>Y :</label> <%= text_field_tag :y, params[:y], autocomplete: 'off' %>
             <%= submit_tag 'Change Size' %>
         <% end %>
-        <%= button_to 'Start', start_path, method: :get, remote: true, class:'start_btn' %>
+        
     </div>
 
     <div class="rover_input">
@@ -16,11 +16,12 @@
         <%= form_tag(rovers_instructions_path, method: :post, remote: true) do %>
             <label>Set Starting point :</label> 
             <%= hidden_field_tag :rover_id0,"", value:0 %>
-            <%= text_field_tag :path0, params[:path0], autocomplete: 'off' %>
+            <%= text_field_tag :path0, params[:path0], autocomplete: 'off', value:'1 1 S' %>
             <label>Give directions :</label> <%= text_field_tag :directions0, params[:directions0], autocomplete: 'off' %>
             <div class="rover_instructions"></div>
             <%= submit_tag 'Change' %>
         <% end %>
+        <%= button_to 'Start', start_path, remote: true, class:'start_btn' %>
     </div>
         
 
@@ -29,7 +30,9 @@
         <% @grid_hash.reverse.each_with_index do |grid, index| %>
             <div class="location">
                 <p>X(<%= grid[:location].first %>) , Y(<%= grid[:location].last %>)</p>
-                <div id="<%= grid[:location].first %><%= grid[:location].last %>"></div>
+                <div id="<%= grid[:location].first %><%= grid[:location].last %>">
+                
+                </div>
             </div>
         <% end %>
     </div>

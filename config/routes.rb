@@ -2,7 +2,7 @@ Rails.application.routes.draw do
   root to: 'plateau#index'
 
   get '/create/rover' , to: 'plateau#create'
-  get '/start', to: 'plateau#start'
+  post '/start', to: 'plateau#start'
   post '/rovers/instructions' , to: 'plateau#set_up_rover'
   # resources :plateau
 
