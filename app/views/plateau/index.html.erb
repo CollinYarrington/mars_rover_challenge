@@ -1,5 +1,6 @@
-<div>
+<center>
     <div class="input_panel">
+    <%# Here you set the grid size using the X and Y axis %>
         <%= form_tag(root_path, method: :get) do %>
         <label>Set grid size:</label>  <br/>
             <label>X :</label> <%= text_field_tag :x, params[:x], autocomplete: 'off' %>
@@ -13,27 +14,35 @@
     <%# Creates a new rover %>
     <%= link_to 'Generate a rover <- Click me!', create_rover_path, method: :get, remote: true, class:'create_rover' %>
     <%# By default there is one rover %>
-        <%= form_tag(rovers_instructions_path, method: :post, remote: true) do %>
+        <%= form_tag(rovers_instructions_path, method: :get, remote: true) do %>
             <label>Set Starting point :</label> 
             <%= hidden_field_tag :rover_id0,"", value:0 %>
-            <%= text_field_tag :path0, params[:path0], autocomplete: 'off', value:'1 1 S' %>
+            <%= text_field_tag :path0, params[:path0], autocomplete: 'off', value:'0 0 N' %>
             <label>Give directions :</label> <%= text_field_tag :directions0, params[:directions0], autocomplete: 'off' %>
             <div class="rover_instructions"></div>
-            <%= submit_tag 'Change' %>
+            <%= submit_tag 'Start Moving Rover', class:'start_btn' %>
         <% end %>
-        <%= button_to 'Start', start_path, remote: true, class:'start_btn' %>
-    </div>
         
+    </div>
+</center>
 
     <div class="plateau_panel">
         <%# This builds the grid layout with the X,Y axis %>
         <% @grid_hash.reverse.each_with_index do |grid, index| %>
             <div class="location">
-                <p>X(<%= grid[:location].first %>) , Y(<%= grid[:location].last %>)</p>
-                <div id="<%= grid[:location].first %><%= grid[:location].last %>">
+                <p>X(<%= grid.first %>) , Y(<%= grid.last %>)</p>
+                <div id="<%= grid.first %><%= grid.last %>">
                 
                 </div>
             </div>
         <% end %>
     </div>
-</div>
+
+    <div id="log">
+    <b>Rover Action Logs:</b>
+    </div>
+
+
+    <script>
+    var grid = <%= raw @grid_hash.to_json %>
+    </script>
