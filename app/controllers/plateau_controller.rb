@@ -1,8 +1,10 @@
 class PlateauController < ApplicationController
   def index
-    if params[:x] && params[:y]
-      @x_axis = params[:x].to_i 
-      @y_axis = params[:y].to_i 
+
+    # Splits the string and supplies the X and Y axis so that the grid size can be made
+    if params[:x_y]
+      @x_axis = params[:x_y].split(" ")[0].to_i
+      @y_axis = params[:x_y].split(" ")[1].to_i
     else
       @x_axis = 0
       @y_axis = 0
@@ -22,14 +24,13 @@ class PlateauController < ApplicationController
     range = @x_axis..0
     (0..@y_axis).each do |y_axis| 
       (range.first).downto(range.last).each do |x_axis| 
-        @grid_hash << "#{x_axis}  #{y_axis}"
+        @grid_hash << "#{x_axis}_#{y_axis}"
       end
     end
 
     # Defining globel variables that contains all the rovers information
     $rover_id = 0
     $rover = [{:id => 0, :path => nil, :facing => nil, :directions => nil, :degrees => nil , :cardinal_compass_points => nil}]
-    p $grid_hash = @grid_hash
     $rotation = 0
   end
 
@@ -48,7 +49,7 @@ class PlateauController < ApplicationController
       array = params["path#{id}"].split(" ")
       direction_facing = array.pop
       position = array
-      start_at = "#{position[0]},#{position[1]} "
+      start_at = "#{position[0]}_#{position[1]} "
 
       rover[:path] = start_at.split(" ")
       rover[:facing] = direction_facing
@@ -58,8 +59,6 @@ class PlateauController < ApplicationController
 
   # builds the array that provides the rotation/path/cardinal compass point for each rover
   def start
-    
-    # $rover.each_with_index do |rover, index|
     array = []
     $rover_orientation = ""
     cardinal_compass_points = []
@@ -115,30 +114,28 @@ class PlateauController < ApplicationController
           $rover_orientation = "E"
           cardinal_compass_points << "East"
         end
-        
 
         if directions == "M" && $rover_orientation == "N"
           # just increases the value on the y-axis
           $rover[index][:degrees] = array << "M"
-          p $rover[index][:path] << "#{$rover[index][:path].last.split(",")[0].to_i},#{$rover[index][:path].last.split(",")[1].to_i + 1}"
+          $rover[index][:path] << "#{$rover[index][:path].last.split("_")[0].to_i}_#{$rover[index][:path].last.split("_")[1].to_i + 1}"
         elsif directions == "M" && $rover_orientation == "E"
           # just increases the value on the x-axis
           $rover[index][:degrees] = array << "M"
-          p $rover[index][:path] << "#{$rover[index][:path].last.split(",")[0].to_i + 1},#{$rover[index][:path].last.split(",")[1].to_i}"
+          $rover[index][:path] << "#{$rover[index][:path].last.split("_")[0].to_i + 1}_#{$rover[index][:path].last.split("_")[1].to_i}"
         elsif directions == "M" && $rover_orientation == "S"
           # just decreases the value on the y-axis
           $rover[index][:degrees] = array << "M"
-          p $rover[index][:path] << "#{$rover[index][:path].last.split(",")[0].to_i},#{$rover[index][:path].last.split(",")[1].to_i - 1}"
+          $rover[index][:path] << "#{$rover[index][:path].last.split("_")[0].to_i}_#{$rover[index][:path].last.split("_")[1].to_i - 1}"
         elsif directions == "M" && $rover_orientation == "W"  
           # just decreases the value on the x-axis
           $rover[index][:degrees] = array << "M"
-          p $rover[index][:path] << "#{$rover[index][:path].last.split(",")[0].to_i - 1},#{$rover[index][:path].last.split(",")[1].to_i}"
+          $rover[index][:path] << "#{$rover[index][:path].last.split("_")[0].to_i - 1}_#{$rover[index][:path].last.split("_")[1].to_i}"
         end
         
       end
       
-      $rover[index][:cardinal_compass_points] = cardinal_compass_points
-    # end
+    $rover[index][:cardinal_compass_points] = cardinal_compass_points
     
      @rover_array_of_hashes = $rover
     respond_to do |format|

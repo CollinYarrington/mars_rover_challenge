@@ -1,15 +1,17 @@
 $(document).ready(function() {
-    // console.log(grid);
+    
     var rover_id = 0;
     var fetch_rover = 0;
     
     
     $(".start_btn").on("click", function(){
         // grid is being set on the index.erb.html page
-
+        // Clears the grid
         $(grid).each(function(i){
             $("#"+ grid[i].replace("  ","")).html("");
         });
+
+        $("#log").html('');
 
         fetch_rover = 0
         setTimeout( function(){
@@ -20,13 +22,15 @@ $(document).ready(function() {
                 contentType: "application/json", 
                 success:function(array){
                 rover = array;
+
             try{
-                if (grid.includes(rover['path'][rover['path'].length - 1].replace(",","  "))){
+                if (grid.includes(rover['path'][rover['path'].length - 1])){
                     // Returns true
                     animate_rover(rover);
                 }else{
                     // Returns false
-                    alert("rover " + fetch_rover + " will end up going off the plateau!");
+                    alert("rover " + fetch_rover + " will end up going off the plateau! Check the Logs.");
+                    $("#log").append("<p style='color:red;'>Rover "+(fetch_rover)+" - will end up going off the plateau! Terminating process...  <span style='font-size: 20px;'>💥&#128545;💥<span> </p>");
                     return
                 }  
             } catch {console.log("we have no more paths to follow");}
@@ -35,9 +39,10 @@ $(document).ready(function() {
     },1000);
     });
     
+    // Controls the rotation and the steps each rover takes
     function animate_rover(rover){
     try {
-        var starting_point = rover["path"][0].replace(',','');
+        var starting_point = rover["path"][0];
         var facing =rover["degrees"][0];
         var array = rover["path"];
         var id = rover["id"];
@@ -83,6 +88,7 @@ $(document).ready(function() {
     }               
     }
 
+    // Gets the next rover
     function next(){
         
     try {
@@ -95,7 +101,6 @@ $(document).ready(function() {
             rover = array;
 
             try{
-                console.log(rover['path']);
                 if (grid.includes(rover['path'][rover['path'].length - 1].replace(",","  "))){
                     // Returns true
                     animate_rover(rover);
@@ -110,14 +115,16 @@ $(document).ready(function() {
     } catch(err) {
         console.log("No more data to process");
     } finally {
-        ended_at = rover['path'][rover['path'].length - 1];
+        ended_at = rover['path'][rover['path'].length - 1].split("_");
         pointing = rover['cardinal_compass_points'][rover['cardinal_compass_points'].length - 1];
-        $("#log").append("<p>Rover "+(fetch_rover-1)+" - went to block X("+ended_at[0]+") , Y("+ended_at[2]+") and is facing "+pointing+" </p>");}
+        $("#log").append("<p>Rover "+(fetch_rover-1)+" - went to block X("+ended_at[0]+") , Y("+ended_at[1]+") and is facing "+pointing+" </p>");}
     }
 
+    // Sets the path
     function move_to_new_location(path_arr,prev_rotation,id){
-        var remove_location = path_arr.shift().replace(',','');
-        var new_location = path_arr[0].replace(',','');
+        var remove_location = path_arr.shift();
+        var new_location = path_arr[0];
+        
         
         $("#"+new_location).html('<img height="50px" style="transform: rotate(' + prev_rotation + 'deg)"  id="rover'+id+'" src="/assets/rover.png">');
         $("#"+remove_location).html(''); 
