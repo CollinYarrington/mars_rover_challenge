@@ -107,6 +107,7 @@ $(document).ready(function() {
                 }else{
                     // Returns false
                     alert("rover " + fetch_rover + " will end up going off the plateau!");
+                    $("#log").append("<p style='color:red;'>Rover "+(fetch_rover)+" - will end up going off the plateau! Terminating process...  <span style='font-size: 20px;'>💥&#128545;💥<span> </p>");
                     return
                 }  
             } catch {console.log("we have no more paths to follow");}      
