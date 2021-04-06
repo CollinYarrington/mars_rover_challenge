@@ -1,24 +1,29 @@
-# README
+**Prerequisites:**
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+You must have ruby installed. To check if you do run the following:
+```
+$ ruby -v
+```
 
-Things you may want to cover:
+Make sure you have ruby on rails installed. To check if you do run the following:
+```
+$ rails -v
+```
 
-* Ruby version
+**Clone this project:**
 
-* System dependencies
+First cd into the directory where you want to save it. (for example your desktop).
 
-* Configuration
+then run the following from that directory
+```
+ git clone https://github.com/CollinYarrington/mars_rover_challenge.git
+```
 
-* Database creation
+This will clone the project. 
 
-* Database initialization
+**Start the rails server:**
 
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+First cd into the project folder then run the following:
+```
+$ rails s
+```
